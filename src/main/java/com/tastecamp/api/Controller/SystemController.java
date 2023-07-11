@@ -21,18 +21,18 @@ public class SystemController {
     private SystemService service;
 
     @PostMapping("/start")
-    public CandidateDTO startProcess(@RequestBody CandidateDTO body) {
-
+    public Long startProcess(@RequestBody CandidateDTO body) {
         try {
-            service.PostCandidate(body);
+            Candidate candidate= service.PostCandidate(body);
+            return candidate.getId();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
+            throw e;
         }
-        return body;
     }
 
     @GetMapping
-    public List<Candidate> getCandidates(){
+    public List<Candidate> getCandidates() {
         return service.getCandidates();
     }
 }

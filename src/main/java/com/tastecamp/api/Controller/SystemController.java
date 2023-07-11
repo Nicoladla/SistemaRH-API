@@ -26,7 +26,7 @@ public class SystemController {
         try {
             service.PostCandidate(body);
         } catch (Exception e) {
-            System.out.println("Deu ruim");
+            System.out.println(e);
         }
         return body;
     }

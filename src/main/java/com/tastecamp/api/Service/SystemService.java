@@ -17,6 +17,10 @@ public class SystemService {
     private SystemRepository repository;
 
     public void PostCandidate(@RequestBody CandidateDTO body) {
+        // if (body.name() == null || body.name().isEmpty()) {
+        //     throw new RequisicaoRuimException("Nome inválido.");
+        // }
+        
         repository.save(new Candidate(body));
     }
 

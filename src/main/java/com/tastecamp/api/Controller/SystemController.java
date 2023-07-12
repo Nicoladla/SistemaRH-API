@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tastecamp.api.Service.SystemService;
 import com.tastecamp.api.dto.CandidateDTO;
+import com.tastecamp.api.dto.IdCandidateDTO;
 import com.tastecamp.api.model.Candidate;
 
 @RestController
@@ -23,10 +24,19 @@ public class SystemController {
     @PostMapping("/start")
     public Long startProcess(@RequestBody CandidateDTO body) {
         try {
-            Candidate candidate= service.PostCandidate(body);
+            Candidate candidate = service.PostCandidate(body);
             return candidate.getId();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    @PostMapping("/schedule")
+    public void scheduleInterview(@RequestBody IdCandidateDTO body) {
+        try {
+            service.updateCandidateStatus(body);
+        } catch (Exception e) {
             throw e;
         }
     }

@@ -1,5 +1,6 @@
 package com.tastecamp.api.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,9 +72,22 @@ public class SystemService {
     public StatusCandidate getStatusCandidateById(Long id) {
         CheckIfCandidateExists(id);
 
-        Optional<Candidate> candidate= repository.findById(id);
+        Optional<Candidate> candidate = repository.findById(id);
 
         return candidate.get().getStatus();
+    }
+
+    public List<String> getApprovedCandidates() {
+        List<Candidate> candidates = getCandidates();
+        List<String> approvedCandidates = new ArrayList<>();
+
+        for (int i = 0; i < candidates.size(); i++) {
+            if (candidates.get(i).getStatus() == StatusCandidate.APROVADO) {
+                approvedCandidates.add(candidates.get(i).getNome());
+            }
+        }
+
+        return approvedCandidates;
     }
 
     public List<Candidate> getCandidates() {

@@ -1,7 +1,6 @@
 package com.tastecamp.api.Controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,6 +65,15 @@ public class SystemController {
     public StatusCandidate checkCandidateStatus(@PathVariable Long id) {
         try {
             return service.getStatusCandidateById(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    @GetMapping("/approved")
+    public List<String> getApprovedCandidates() {
+        try {
+            return service.getApprovedCandidates();
         } catch (Exception e) {
             throw e;
         }

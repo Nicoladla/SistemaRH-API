@@ -1,7 +1,7 @@
 package com.tastecamp.api.model;
 
 import com.tastecamp.api.dto.CandidateDTO;
-import com.tastecamp.api.enums.Status;
+import com.tastecamp.api.enums.StatusCandidate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,7 @@ public class Candidate {
 
     public Candidate(CandidateDTO data){
         this.nome= data.nome();
-        this.status= Status.RECEBIDO;
+        this.status= StatusCandidate.RECEBIDO;
     }
 
     @Id
@@ -29,5 +29,5 @@ public class Candidate {
     private String nome;
 
     @Column(length = 11, nullable = false)
-    private Status status;
+    private StatusCandidate status;
 }

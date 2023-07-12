@@ -12,7 +12,7 @@ import com.tastecamp.api.Exception.BadRequestException;
 import com.tastecamp.api.Repository.SystemRepository;
 import com.tastecamp.api.dto.CandidateDTO;
 import com.tastecamp.api.dto.IdCandidateDTO;
-import com.tastecamp.api.enums.Status;
+import com.tastecamp.api.enums.StatusCandidate;
 import com.tastecamp.api.model.Candidate;
 
 @Service
@@ -38,19 +38,53 @@ public class SystemService {
         return candidate;
     }
 
-    public void updateCandidateStatus(IdCandidateDTO body) {
+    public void scheduleInterview(IdCandidateDTO body) {
         repository.findById(body.codCandidato()).map(candidate -> {
-            if (candidate.getStatus() != Status.RECEBIDO) {
+            if (candidate.getStatus() != StatusCandidate.RECEBIDO) {
                 throw new NotFoundException("Candidato não encontrado");
             }
 
-            candidate.setStatus(Status.QUALIFICADO);
+            candidate.setStatus(StatusCandidate.QUALIFICADO);
 
             return repository.save(candidate);
         }).orElseThrow(() -> new NotFoundException("Candidato não encontrado"));
     }
 
+    public void deleteCandidate(IdCandidateDTO body) {
+        CheckIfCandidateExists(body.codCandidato());
+
+        repository.deleteById(body.codCandidato());
+    }
+
+    public void approveCandidate(IdCandidateDTO body) {
+        repository.findById(body.codCandidato()).map(candidate -> {
+            if (candidate.getStatus() != StatusCandidate.QUALIFICADO) {
+                throw new NotFoundException("Candidato não encontrado");
+            }
+
+            candidate.setStatus(StatusCandidate.APROVADO);
+
+            return repository.save(candidate);
+        }).orElseThrow(() -> new NotFoundException("Candidato não encontrado"));
+    }
+
+    public StatusCandidate getStatusCandidateById(Long id) {
+        CheckIfCandidateExists(id);
+
+        Optional<Candidate> candidate= repository.findById(id);
+
+        return candidate.get().getStatus();
+    }
+
     public List<Candidate> getCandidates() {
         return repository.findAll();
+    }
+
+    private void CheckIfCandidateExists(Long id) {
+        Optional<Candidate> candidate = repository.findById(id);
+
+        if (!candidate.isPresent()) {
+            throw new NotFoundException("Candidato não encontrado");
+        }
     }
 }

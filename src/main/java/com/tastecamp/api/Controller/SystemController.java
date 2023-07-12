@@ -29,7 +29,6 @@ public class SystemController {
             Candidate candidate = service.PostCandidate(body);
             return candidate.getId();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw e;
         }
     }

@@ -3,13 +3,18 @@ package com.tastecamp.api.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.tastecamp.api.Exception.BadRequestException;
+import com.tastecamp.api.Exception.ConflictException;
+import com.tastecamp.api.Exception.NotFoundException;
 import com.tastecamp.api.Service.SystemService;
 import com.tastecamp.api.dto.CandidateDTO;
 import com.tastecamp.api.dto.IdCandidateDTO;
@@ -28,8 +33,10 @@ public class SystemController {
         try {
             Candidate candidate = service.PostCandidate(body);
             return candidate.getId();
-        } catch (Exception e) {
-            throw e;
+        } catch (BadRequestException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (ConflictException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
 
@@ -37,8 +44,8 @@ public class SystemController {
     public void scheduleInterview(@RequestBody IdCandidateDTO body) {
         try {
             service.scheduleInterview(body);
-        } catch (Exception e) {
-            throw e;
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
@@ -46,8 +53,8 @@ public class SystemController {
     public void disqualifyCandidate(@RequestBody IdCandidateDTO body) {
         try {
             service.deleteCandidate(body);
-        } catch (Exception e) {
-            throw e;
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
@@ -55,8 +62,8 @@ public class SystemController {
     public void approveCandidate(@RequestBody IdCandidateDTO body) {
         try {
             service.approveCandidate(body);
-        } catch (Exception e) {
-            throw e;
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
@@ -64,18 +71,14 @@ public class SystemController {
     public StatusCandidate checkCandidateStatus(@PathVariable Long id) {
         try {
             return service.getStatusCandidateById(id);
-        } catch (Exception e) {
-            throw e;
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
-    
+
     @GetMapping("/approved")
     public List<String> getApprovedCandidates() {
-        try {
-            return service.getApprovedCandidates();
-        } catch (Exception e) {
-            throw e;
-        }
+        return service.getApprovedCandidates();
     }
 
     @GetMapping
